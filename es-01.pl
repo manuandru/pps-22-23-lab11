@@ -16,9 +16,17 @@ search_two(E, [_|T]) :- search_two(E, T).
 
 
 
-% 1.3) size(List , Size)
+% 1.3) size(+List, -Size)
 % Size will contain the number of elements in List
 % size([1,2,3], N). -> yes N/3
 % not fully relational
 size([], 0).
 size([_|T], N) :- size(T, N2), N is N2 + 1.
+
+
+
+% 1.4) sum(+List, -Sum)
+% sum([1,2,3],X). -> yes X/6
+% not fully relational
+sum([], 0).
+sum([H|T], N) :- sum(T, N2), N is N2 + H.
