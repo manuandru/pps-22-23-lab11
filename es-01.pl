@@ -13,3 +13,12 @@ search2(E, [_|T]) :- search2(E, T).
 % search_two(a,[b,c,a,d,a,d,e]). → yes
 search_two(E, [E,X,E|_]) :- E \= X, !.
 search_two(E, [_|T]) :- search_two(E, T).
+
+
+
+% 1.3) size(List , Size)
+% Size will contain the number of elements in List
+% size([1,2,3], N). -> yes N/3
+% not fully relational
+size([], 0).
+size([_|T], N) :- size(T, N2), N is N2 + 1.
