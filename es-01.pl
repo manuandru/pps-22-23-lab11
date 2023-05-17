@@ -44,10 +44,18 @@ sum([H|T], N) :- sum(T, N2), N is N2 + H.
 max([], Max, Max, Min, Min).
 max([H|T], N1, Max, N2, Min) :- H >= N1, max(T, H, Max, N2, Min), !.
 max([H|T], N1, Max, N2, Min) :- H =< N2, max(T, N1, Max, H, Min), !.
-max([H|T], N1, Max, N2, Min) :- max(T, N1, Max, N2, Min).
+max([_|T], N1, Max, N2, Min) :- max(T, N1, Max, N2, Min).
 
 % idiomatic
 max([H|[]], H, H).
 max([H|T], H, Min) :- max(T, Max, Min), H >= Max, !.
 max([H|T], Max, H) :- max(T, Max, Min), H =< Min, !.
-max([H|T], Max, Min) :- max(T, Max, Min).
+max([_|T], Max, Min) :- max(T, Max, Min).
+
+
+
+% 1.6) sublist(?List1, +List2)
+% List1 should contain elements all also in List2
+% example: sublist([1,2],[5,3,2,1]).
+sublist([], _).
+sublist([H|T], L) :- member(H, L), sublist(T, L).
