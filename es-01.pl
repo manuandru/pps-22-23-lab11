@@ -30,3 +30,24 @@ size([_|T], N) :- size(T, N2), N is N2 + 1.
 % not fully relational
 sum([], 0).
 sum([H|T], N) :- sum(T, N2), N is N2 + H.
+
+
+
+% 1.5) max(+List, -Max, -Min)
+% Max is the biggest element in List
+% Min is the smallest element in List
+% Suppose the list has at least one element
+% max([1,2,3,4,3,2,1,0,1], Max, Min). yes. -> Max / 4, Min / -1
+
+% performance
+%max([H|T], Max, Min) :- max(T, H, Max, H, Min).
+max([], Max, Max, Min, Min).
+max([H|T], N1, Max, N2, Min) :- H >= N1, max(T, H, Max, N2, Min), !.
+max([H|T], N1, Max, N2, Min) :- H =< N2, max(T, N1, Max, H, Min), !.
+max([H|T], N1, Max, N2, Min) :- max(T, N1, Max, N2, Min).
+
+% idiomatic
+max([H|[]], H, H).
+max([H|T], H, Min) :- max(T, Max, Min), H >= Max, !.
+max([H|T], Max, H) :- max(T, Max, Min), H =< Min, !.
+max([H|T], Max, Min) :- max(T, Max, Min).
