@@ -59,3 +59,35 @@ max([_|T], Max, Min) :- max(T, Max, Min).
 % example: sublist([1,2],[5,3,2,1]).
 sublist([], _).
 sublist([H|T], L) :- member(H, L), sublist(T, L).
+
+
+
+% 2.1) dropAny(?Elem,?List,?OutList)
+% Drops any occurrence of element
+% dropAny(10,[10,20,10,30,10],L)
+% L/[20,10,30,10]
+% L/[10,20,30,10]
+% L/[10,20,10,30]
+dropAny(X, [X | T], T).
+dropAny(X, [H | Xs], [H | L]) :- dropAny(X, Xs, L).
+
+% 2.2) others drops
+
+% 2.2.a) dropFirst(?Elem,?List,?OutList)
+% drops only the first occurrence (showing no alternative results)
+% dropFirst(10,[20,10,20,10,30,10],L). -> yes L / [20,20,10,30,10]
+dropFirst(X, [X | T], T) :- !.
+dropFirst(X, [H | Xs], [H | L]) :- dropFirst(X, Xs, L).
+
+% 2.2.b) dropLast(?Elem,?List,?OutList)
+% drops only the last occurrence (showing no alternative results)
+% dropLast(10,[10,20,10,30,10,20],L). -> yes L / [10,20,10,30,20]
+dropLast(X, [H | Xs], [H | L]) :- dropLast(X, Xs, L), !.
+dropLast(X, [X | T], T).
+
+% 2.2.c) dropAll(?Elem,?List,?OutList)
+% drop all occurrences, returning a single list as a result
+% dropAll(10,[10,20,10,30,10,20],L). -> yes L / [20,30,20]
+dropAll(_, [], []).
+dropAll(X, [X | T], L) :- dropAll(X, T, L), !.
+dropAll(X, [H | T], [H | L]) :- X \= H, dropAll(X, T, L).
