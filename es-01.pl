@@ -89,7 +89,7 @@ dropLast(X, [X | T], T).
 % drop all occurrences, returning a single list as a result
 % dropAll(10,[10,20,10,30,10,20],L). -> yes L / [20,30,20]
 dropAll(_, [], []).
-dropAll(X, [X | T], L) :- dropAll(X, T, L), !.
+dropAll(X, [X | T], L) :- dropAll(X, T, L).
 dropAll(X, [H | T], [H | L]) :- X \= H, dropAll(X, T, L).
 
 
@@ -121,3 +121,21 @@ fromCircList([H1,H2|T], F, [e(H1,H2)|L]) :- fromCircList([H2|T], F, L).
 outDegree([], _, 0).
 outDegree([e(N,_)|T], N, D) :- outDegree(T, N, D2), D is D2+1, !.
 outDegree([e(H,_)|T], N, D) :- H \= N, outDegree(T, N, D).
+
+
+
+% dropNode(+Graph, +Node, -OutGraph)
+% drop all edges starting and leaving from a Node
+% use dropAll defined in 1.1?? NO, drop just the first occurence of e(N,_)
+% dropNode([e(1,2),e(1,3),e(2,3)],1,[e(2,3)]).
+dropNode(G, N, GO):- dropAll(e(N,_), G, G2), dropAll(e(_,N), G2, GO).
+
+
+
+% reaching(+Graph, +Node, -List)
+% all the nodes that can be reached in 1 step from Node
+% possibly use findall , looking for e(Node ,_) combined
+% with member(?Elem,?List)
+% reaching([e(1,2),e(1,3),e(2,3)],1,L). -> L/[2,3]
+% reaching([e(1,2),e(1,2),e(2,3)],1,L). -> L/[2,2]).
+reaching(G, N, L) :- findall(E, member(e(N,E), G), L).
