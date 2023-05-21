@@ -194,20 +194,47 @@ gridlink(N, M, e(X2, Y2)):-
 
 
 % 4.1) next
-% next([n,n,n,n,n,n,n,n,n], x, ???, N). N / [x,n,n,n,n,n,n,n,n], ..., [n,n,n,n,n,n,n,n,x].
+% next([n,n,n,n,n,n,n,n,n], x, nothing, N). N / [x,n,n,n,n,n,n,n,n], ..., [n,n,n,n,n,n,n,n,x].
 
 next(Table, Player, Result, NewTable) :-
 	interval(0, 9, X),
-	move(Table, X, Player, NewTable).
+	move(Table, X, Player, NewTable),
+	checkWin(NewTable, Result).
 
 move([n|T], 0, Player, [Player|T]).
-move([H|T], 0, Player, [H|T]) :- H \= n.
 move([H|T], N, Player, [H|NewTable]) :- N2 is N-1, move(T, N2, Player, NewTable).
 
+% horizontal
+checkWin(NewTable, R) :- NewTable = [R,R,R,_,_,_,_,_,_], assertPlayer(R).
+checkWin(NewTable, R) :- NewTable = [_,_,_,R,R,R,_,_,_], assertPlayer(R).
+checkWin(NewTable, R) :- NewTable = [_,_,_,_,_,_,R,R,R], assertPlayer(R).
 
-	
+% vertical
+checkWin(NewTable, R) :- NewTable = [R,_,_,R,_,_,R,_,_], assertPlayer(R).
+checkWin(NewTable, R) :- NewTable = [_,R,_,_,R,_,_,R,_], assertPlayer(R).
+checkWin(NewTable, R) :- NewTable = [_,_,R,_,_,R,_,_,R], assertPlayer(R).
 
+% diagonal & antidiag
+checkWin(NewTable, R) :- NewTable = [R,_,_,_,R,_,_,_,R], assertPlayer(R).
+checkWin(NewTable, R) :- NewTable = [_,_,R,_,R,_,R,_,_], assertPlayer(R).
 
+% assertPlayer
+assertPlayer(x).
+assertPlayer(o).
 
+% nothing
+checkWin(NewTable, nothing).
 
+game(T, _, x, [T]) :- print(T), print(" winner: "), print(x), nl.
+game(T, _, o, [T]) :- print(T), print(" winner: "), print(o), nl.
+
+game(Table, x, _, [Table|TableList]) :-
+	next(Table, x, R, NewTable),
+	%print(NewTable), nl,
+	game(NewTable, o, R, TableList).
+
+game(Table, o, _, [Table|TableList]) :-
+	next(Table, o, R, NewTable),
+	%print(NewTable), nl,
+	game(NewTable, x, R, TableList).
 
