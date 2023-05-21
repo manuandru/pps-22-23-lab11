@@ -91,3 +91,22 @@ dropLast(X, [X | T], T).
 dropAll(_, [], []).
 dropAll(X, [X | T], L) :- dropAll(X, T, L), !.
 dropAll(X, [H | T], [H | L]) :- X \= H, dropAll(X, T, L).
+
+
+
+% fromList(+List,-Graph)
+% fromList([1,2,3],[e(1,2),e(2,3)]).
+% fromList([1,2],[e(1,2)]).
+% fromList([1],[]).
+fromList([_],[]).
+fromList([H1,H2|T],[e(H1,H2)|L]):- fromList([H2|T],L).
+
+
+
+% fromCircList(+List,-Graph)
+% fromCircList([1,2,3],[e(1,2),e(2,3),e(3,1)]).
+% fromCircList([1,2],[e(1,2),e(2,1)]).
+% fromCircList([1],[e(1,1)]).
+fromCircList([F|T], G) :- fromCircList([F|T], F, G).
+fromCircList([H|[]], F, [e(H,F)]).
+fromCircList([H1,H2|T], F, [e(H1,H2)|L]) :- fromCircList([H2|T], F, L).
