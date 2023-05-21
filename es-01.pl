@@ -152,3 +152,14 @@ nodes([e(N1, N2)|T], [N2|L]) :- nodes(T, L), member(N1,L), !.
 nodes([e(N1, N2)|T], [N1|L]) :- nodes(T, L), member(N2,L), !.
 nodes([e(N1, N2)|T], [N1,N2|L]) :- N1 \= N2, nodes(T, L), !. % e(1,1)
 nodes([e(N1, N1)|T], [N1|L]) :- nodes(T, L).
+
+
+
+% anypath(+Graph, +Node1, +Node2, -ListPath)
+% a path from Node1 to Node2
+% if there are many path , they are showed 1-by -1
+% anypath([e(1,2),e(1,3),e(2,3)],1,3,L).
+%  -> L/[e(1,2),e(2,3)]
+%  -> L/[e(1,3)]
+anypath(G, N1, N2, [e(N1, N2)]) :- member(e(N1,N2), G).
+anypath(G, N1, N2, L) :- anypath(G, N1, N3, L1), anypath(G, N3, N2, L2), !, append(L1, L2, L).
