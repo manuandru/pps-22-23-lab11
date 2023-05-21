@@ -173,3 +173,41 @@ anypath(G, N1, N2, [e(N1,N3)|L]) :- member(e(N1, N3), G), anypath(G, N3, N2, L).
 % Use findall and anyPath!
 % allreaching([e(1,2),e(2,3),e(3,5)],1,[2,3,5]).
 allreaching(G, N, L) :- findall(E, anypath(G, N, E, _), L).
+
+
+
+% 3.9) ???
+
+interval(A, B, A).
+interval(A, B, X) :- A2 is A+1, A2 < B, interval(A2, B, X).
+
+neighbour(A, B, A, B2):- B2 is B+1.
+neighbour(A, B, A, B2):- B2 is B-1.
+neighbour(A, B, A2, B):- A2 is A+1.
+neighbour(A, B, A2, B):- A2 is A-1.
+
+gridlink(N, M, e(X2, Y2)):- 
+    interval(0, N, X),
+    interval(0, M, Y),
+    neighbour(X, Y, X2, Y2),
+    X2 >= 0, Y2 >= 0, X2 < N, Y2 < M.
+
+
+% 4.1) next
+% next([n,n,n,n,n,n,n,n,n], x, ???, N). N / [x,n,n,n,n,n,n,n,n], ..., [n,n,n,n,n,n,n,n,x].
+
+next(Table, Player, Result, NewTable) :-
+	interval(0, 9, X),
+	move(Table, X, Player, NewTable).
+
+move([n|T], 0, Player, [Player|T]).
+move([H|T], 0, Player, [H|T]) :- H \= n.
+move([H|T], N, Player, [H|NewTable]) :- N2 is N-1, move(T, N2, Player, NewTable).
+
+
+	
+
+
+
+
+
