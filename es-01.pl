@@ -139,3 +139,16 @@ dropNode(G, N, GO):- dropAll(e(N,_), G, G2), dropAll(e(_,N), G2, GO).
 % reaching([e(1,2),e(1,3),e(2,3)],1,L). -> L/[2,3]
 % reaching([e(1,2),e(1,2),e(2,3)],1,L). -> L/[2,2]).
 reaching(G, N, L) :- findall(E, member(e(N,E), G), L).
+
+
+
+% nodes (+Graph , -Nodes)
+% create a list of all nodes (no duplicates) in the graph (inverse of fromList)
+% nodes([e(1,2),e(2,3),e(3,4)],L). -> L/[1,2,3,4]
+% nodes([e(1,2),e(1,3)],L). -> L/[1,2,3].
+nodes([], []).
+nodes([e(N1, N2)|T], L) :- nodes(T, L), member(N1,L), member(N2,L), !.
+nodes([e(N1, N2)|T], [N2|L]) :- nodes(T, L), member(N1,L), !.
+nodes([e(N1, N2)|T], [N1|L]) :- nodes(T, L), member(N2,L), !.
+nodes([e(N1, N2)|T], [N1,N2|L]) :- N1 \= N2, nodes(T, L), !. % e(1,1)
+nodes([e(N1, N1)|T], [N1|L]) :- nodes(T, L).
